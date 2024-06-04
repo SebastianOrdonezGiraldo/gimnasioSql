@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +23,10 @@ public class MiembroUIFrame extends JFrame {
     private JTextField edadActualizarField;
     private JTextField numeroMembresiaActualizarField;
     private JTextArea registroEntradasArea;
+    private JButton entradaButton;
+    private JButton salidaButton;
+
+
 
     private JTextField nombreField;
     private JTextField apellidoField;
@@ -195,78 +201,77 @@ public class MiembroUIFrame extends JFrame {
 // Panel de Entrada al Gimnasio
         JPanel entradaPanel = new JPanel(new GridBagLayout());
         entradaPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        entradaPanel.setBackground(new Color(120, 180, 120)); // Color verde claro
+        entradaPanel.setBackground(new Color(0, 150, 136)); // Color verde oscuro
 
-        JLabel numeroMembresiaEntradaLabel = new JLabel("Número de membresía (Cédula):");
-        numeroMembresiaEntradaLabel.setForeground(Color.WHITE);
-        JTextField numeroMembresiaEntradaField = new JTextField(20);
+        GridBagConstraints gbca = new GridBagConstraints();
+        gbca.insets = new Insets(5, 5, 5, 5);
 
-        JButton entradaButton = new JButton("Entrada al Gimnasio");
+        gbca.gridx = 0;
+        gbca.gridy = 0;
+        gbca.anchor = GridBagConstraints.EAST;
+        entradaPanel.add(numeroMembresiaField, gbca);
+
+        gbca.gridx = 1;
+        gbca.anchor = GridBagConstraints.WEST;
+        entradaPanel.add(numeroMembresiaField, gbca);
+
+        gbca.gridx = 0;
+        gbca.gridy = 1;
+        gbca.gridwidth = 2;
+        gbca.anchor = GridBagConstraints.CENTER;
+        entradaButton = new JButton("Entrada al Gimnasio");
         entradaButton.setBackground(new Color(0, 150, 136)); // Color verde oscuro
         entradaButton.setForeground(Color.WHITE);
+        entradaPanel.add(entradaButton, gbca);
 
-        JButton salidaButton = new JButton("Salida del Gimnasio");
+        gbca.gridy = 2;
+        salidaButton = new JButton("Salida del Gimnasio");
         salidaButton.setBackground(new Color(255, 87, 34)); // Color naranja
         salidaButton.setForeground(Color.WHITE);
+        entradaPanel.add(salidaButton, gbca);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        entradaPanel.add(numeroMembresiaEntradaLabel, gbc);
+        add(entradaPanel, BorderLayout.SOUTH);
 
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        entradaPanel.add(numeroMembresiaEntradaField, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        entradaPanel.add(entradaButton, gbc);
-
-        gbc.gridy = 2;
-        entradaPanel.add(salidaButton, gbc);
-
-// Agregar el panel de entrada al gimnasio al tabbedPane
-        tabbedPane.addTab("Entrada", entradaPanel);
-
-// Acciones de los botones
+        // Acción del botón de entrada
         entradaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String numeroMembresia = numeroMembresiaEntradaField.getText();
-                boolean estaRegistrado = verificarMembresiaRegistrada(numeroMembresia);
-                if (estaRegistrado) {
-                    JOptionPane.showMessageDialog(MiembroUIFrame.this, "¡Bienvenido al gimnasio!");
-                } else {
-                    JOptionPane.showMessageDialog(MiembroUIFrame.this, "Lo sentimos, su número de membresía no está registrado.");
-                }
-            }
-        });
-        salidaButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String numeroMembresia = JOptionPane.showInputDialog(MiembroUIFrame.this, "Ingrese el número de membresía del miembro que sale del gimnasio:");
+                String numeroMembresia = numeroMembresiaField.getText();
 
                 if (numeroMembresia != null && !numeroMembresia.isEmpty()) {
                     // Verificar si el número de membresía está registrado
-                    if (verificarMembresiaRegistrada(numeroMembresia)) {
-                        // Obtener la hora actual
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                        String horaSalida = sdf.format(new Date());
-
-                        // Agregar el registro de salida al JTextArea
-                        registroEntradasArea.append("Usuario con número de membresía " + numeroMembresia + " salió a las " + horaSalida + "\n");
-
-
-                        // Limpiar el campo de número de membresía
-                        numeroMembresiaField.setText("");
+                    Miembro miembro = miembroService.obtenerMiembroPorNumeroMembresia(Integer.parseInt(numeroMembresia));
+                    if (miembro != null) {
+                        mostrarMensajeBienvenida(miembro.getNombre());
                     } else {
                         JOptionPane.showMessageDialog(MiembroUIFrame.this, "El número de membresía no está registrado.");
                     }
                 }
             }
         });
+
+
+        // Acción del botón de salida
+        salidaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String numeroMembresia = numeroMembresiaField.getText();
+
+                if (numeroMembresia != null && !numeroMembresia.isEmpty()) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                    String horaSalida = sdf.format(new Date());
+                    // Verificar si el número de membresía está registrado
+                    Miembro miembro = miembroService.obtenerMiembroPorNumeroMembresia(Integer.parseInt(numeroMembresia));
+                    if (miembro != null) {
+                        mostrarMensajeDespedida(miembro.getNombre());
+                    } else {
+                        JOptionPane.showMessageDialog(MiembroUIFrame.this, "El número de membresía no está registrado.");
+                    }
+                }
+            }
+        });
+
 
         // Panel de Eliminación
         JPanel eliminarPanel = new JPanel(new GridBagLayout());
@@ -410,6 +415,22 @@ public class MiembroUIFrame extends JFrame {
         });
     }
 
+    private void mostrarMensajeBienvenida(String nombre) {
+        LocalTime horaActual = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String horaFormateada = horaActual.format(formatter);
+        JOptionPane.showMessageDialog(this, "🎉 ¡Bienvenido al gimnasio, " + nombre + "! 🏋️‍♂️\n ¡Que tengas una excelente sesión! 🌟\n Hora de entrada: " + horaFormateada);
+    }
+
+    private void mostrarMensajeDespedida(String nombre) {
+        LocalTime horaActual = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String horaFormateada = horaActual.format(formatter);
+        JOptionPane.showMessageDialog(this, "😢 ¡Hasta pronto, " + nombre + "! 😔\n ¡Esperamos verte de nuevo pronto! 🕒\n Hora de salida: " + horaFormateada);
+    }
+
+
+
 
     private void registrarMiembro() {
         String nombre = nombreField.getText();
@@ -473,6 +494,9 @@ public class MiembroUIFrame extends JFrame {
         Miembro miembro = miembroService.obtenerMiembroPorNumeroMembresia(Integer.parseInt(numeroMembresia));
         return miembro != null; // Devolver true si se encontró un miembro con ese número de membresía, false si no se encontró
     }
+
+
+
 
 
     public static void main(String[] args) {
