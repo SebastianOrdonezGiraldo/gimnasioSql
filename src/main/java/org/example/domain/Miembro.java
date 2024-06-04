@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class Miembro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Cambio de Integer a Long
+    private Long id;
     private String nombre;
     private String apellido;
     private int edad;

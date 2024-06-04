@@ -6,6 +6,8 @@ import org.example.ports.out.MiembroRepositoryPort;
 import java.util.ArrayList;
 import java.util.List;
 
+//Esta clase implementa la interfaz MiembroRepositoryPort y se encarga de la lógica de negocio relacionada con los miembros y la
+// interacción con el repositorio de datos.
 public class MiembroRepositoryImpl implements MiembroRepositoryPort {
     private List<Miembro> miembros = new ArrayList<>();
 

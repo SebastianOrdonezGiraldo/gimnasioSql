@@ -6,6 +6,9 @@ import org.example.ports.out.MiembroRepositoryPort;
 
 import java.util.List;
 
+//Esta clase implementa la interfaz MiembroServicePort y se encarga de la lógica de aplicación relacionada con los miembros.
+// Aquí es donde se definen los casos de uso o servicios específicos que la aplicación debe proporcionar en relación con los
+// miembros.
 public class MiembroServiceImpl implements MiembroServicePort {
 
     private final MiembroRepositoryPort miembroRepository;
