@@ -9,8 +9,14 @@ import org.hibernate.Transaction;
 import javax.swing.JOptionPane;
 import java.util.List;
 
+//Esta clase se encarga de la interacción con la base de datos para la entidad Miembro.
+// Implementa operaciones CRUD  utilizando Hibernate para gestionar las transacciones y la sesión con la base de datos.
+// Además, maneja errores y muestra mensajes en caso de fallos.
+
 public class HibernateMiembroRepositoryAdapter implements MiembroRepositoryPort {
 
+//Este método verifica si ya existe un miembro con el número de membresía dado en la base de datos.
+// Utiliza una consulta HQL (Hibernate Query Language) para buscar el miembro.
     private boolean existeNumeroMembresia(int numeroMembresia, Session session) {
         Miembro miembro = session.createQuery("FROM Miembro WHERE numeroMembresia = :numeroMembresia", Miembro.class)
                 .setParameter("numeroMembresia", numeroMembresia)
@@ -18,6 +24,8 @@ public class HibernateMiembroRepositoryAdapter implements MiembroRepositoryPort 
         return miembro != null;
     }
 
+//Este método agrega un nuevo miembro a la base de datos. Si el número de membresía ya existe, lanza una excepción.
+// La transacción se deshace en caso de error.
     @Override
     public void agregarMiembro(Miembro miembro) {
         Transaction transaction = null;
@@ -44,6 +52,8 @@ public class HibernateMiembroRepositoryAdapter implements MiembroRepositoryPort 
         }
     }
 
+//Este método actualiza la información de un miembro existente en la base de datos.
+// Utiliza una transacción de Hibernate y se asegura de deshacerla en caso de error.
     @Override
     public void actualizarMiembro(Miembro miembro) {
         Transaction transaction = null;
@@ -59,6 +69,8 @@ public class HibernateMiembroRepositoryAdapter implements MiembroRepositoryPort 
         }
     }
 
+//Este método elimina un miembro de la base de datos según su número de membresía.
+// Si no se encuentra ningún miembro con ese número, muestra un mensaje.
     @Override
     public void eliminarMiembro(int numeroMembresia) {
         Transaction transaction = null;
@@ -83,6 +95,7 @@ public class HibernateMiembroRepositoryAdapter implements MiembroRepositoryPort 
         }
     }
 
+//Este método recupera todos los miembros de la base de datos y los devuelve como una lista.
     @Override
     public List<Miembro> obtenerMiembros() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -90,6 +103,7 @@ public class HibernateMiembroRepositoryAdapter implements MiembroRepositoryPort 
         }
     }
 
+//Este método recupera un miembro específico según su número de membresía.
     @Override
     public Miembro obtenerMiembroPorNumeroMembresia(int numeroMembresia) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

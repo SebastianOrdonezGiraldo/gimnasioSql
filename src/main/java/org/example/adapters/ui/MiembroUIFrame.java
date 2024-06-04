@@ -41,7 +41,6 @@ public class MiembroUIFrame extends JFrame {
         // Crear un JTabbedPane
         JTabbedPane tabbedPane = new JTabbedPane();
 
-
         // Panel de Registro
         JPanel registroPanel = new JPanel(new GridBagLayout());
         registroPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -111,6 +110,7 @@ public class MiembroUIFrame extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.gridwidth = 2;
         registroPanel.add(registrarButton, gbc);
+
 
 
 
