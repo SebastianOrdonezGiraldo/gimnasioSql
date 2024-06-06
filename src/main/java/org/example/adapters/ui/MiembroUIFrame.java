@@ -33,6 +33,7 @@ public class MiembroUIFrame extends JFrame {
     private JTextField edadField;
     private JTextField numeroMembresiaField;
     private JTextArea miembrosArea;
+    private JTextField entradaMembresiaField;
 
     public MiembroUIFrame() {
         setTitle("Aplicación de Registro de Miembros");
@@ -50,7 +51,7 @@ public class MiembroUIFrame extends JFrame {
         // Panel de Registro
         JPanel registroPanel = new JPanel(new GridBagLayout());
         registroPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        registroPanel.setBackground(new Color(107, 185, 240)); // Color azul claro
+        registroPanel.setBackground(new Color(0,0,0)); // Color azul claro
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -72,8 +73,8 @@ public class MiembroUIFrame extends JFrame {
         numeroMembresiaField = new JTextField(20);
 
         JButton registrarButton = new JButton("Registrar Miembro");
-        registrarButton.setBackground(new Color(0, 120, 215));
-        registrarButton.setForeground(Color.WHITE);
+        registrarButton.setBackground(new Color(255,165,0));
+        registrarButton.setForeground(Color.BLACK);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -123,7 +124,7 @@ public class MiembroUIFrame extends JFrame {
 // Panel de Actualización
         JPanel actualizarPanel = new JPanel(new GridBagLayout());
         actualizarPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        actualizarPanel.setBackground(new Color(107, 185, 240)); // Color azul claro
+        actualizarPanel.setBackground(new Color(0, 0, 0)); // Color azul claro
 
         GridBagConstraints gbcActualizar = new GridBagConstraints();
         gbcActualizar.insets = new Insets(5, 5, 5, 5);
@@ -145,12 +146,12 @@ public class MiembroUIFrame extends JFrame {
         JTextField edadActualizarField = new JTextField(20);
 
         JButton buscarButton = new JButton("Buscar");
-        buscarButton.setBackground(new Color(0, 120, 215));
-        buscarButton.setForeground(Color.WHITE);
+        buscarButton.setBackground(new Color(255,165,0));
+        buscarButton.setForeground(Color.BLACK);
 
         JButton actualizarButton = new JButton("Actualizar Miembro");
-        actualizarButton.setBackground(new Color(0, 120, 215));
-        actualizarButton.setForeground(Color.WHITE);
+        actualizarButton.setBackground(new Color(255,165,0));
+        actualizarButton.setForeground(Color.BLACK);
 
         gbcActualizar.gridx = 0;
         gbcActualizar.gridy = 0;
@@ -201,33 +202,37 @@ public class MiembroUIFrame extends JFrame {
 // Panel de Entrada al Gimnasio
         JPanel entradaPanel = new JPanel(new GridBagLayout());
         entradaPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        entradaPanel.setBackground(new Color(0, 150, 136)); // Color verde oscuro
+        entradaPanel.setBackground(new Color(0,0,0)); // Color verde oscuro
 
         GridBagConstraints gbca = new GridBagConstraints();
         gbca.insets = new Insets(5, 5, 5, 5);
 
-        gbca.gridx = 0;
+        JLabel entradaMembresiaLabel = new JLabel("Ingrese cedula:");
+        entradaMembresiaLabel.setForeground(Color.black);
+        JTextField entradaMembresiaField = new JTextField(16);
+
+        gbca.gridx = -2;
         gbca.gridy = 0;
-        gbca.anchor = GridBagConstraints.EAST;
-        entradaPanel.add(numeroMembresiaField, gbca);
+        gbca.anchor = GridBagConstraints.CENTER;
+        entradaPanel.add(entradaMembresiaLabel, gbca);
 
         gbca.gridx = 1;
         gbca.anchor = GridBagConstraints.WEST;
-        entradaPanel.add(numeroMembresiaField, gbca);
+        entradaPanel.add(entradaMembresiaField, gbca);
 
-        gbca.gridx = 0;
+        gbca.gridx = -1;
         gbca.gridy = 1;
         gbca.gridwidth = 2;
         gbca.anchor = GridBagConstraints.CENTER;
         entradaButton = new JButton("Entrada al Gimnasio");
-        entradaButton.setBackground(new Color(0, 150, 136)); // Color verde oscuro
-        entradaButton.setForeground(Color.WHITE);
+        entradaButton.setBackground(new Color(255,165,0)); // Color verde oscuro
+        entradaButton.setForeground(Color.BLACK);
         entradaPanel.add(entradaButton, gbca);
 
         gbca.gridy = 2;
         salidaButton = new JButton("Salida del Gimnasio");
-        salidaButton.setBackground(new Color(255, 87, 34)); // Color naranja
-        salidaButton.setForeground(Color.WHITE);
+        salidaButton.setBackground(new Color(255,165,0)); // Color naranja
+        salidaButton.setForeground(Color.BLACK);
         entradaPanel.add(salidaButton, gbca);
 
         add(entradaPanel, BorderLayout.SOUTH);
@@ -237,7 +242,7 @@ public class MiembroUIFrame extends JFrame {
         entradaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String numeroMembresia = numeroMembresiaField.getText();
+                String numeroMembresia = entradaMembresiaField.getText();
 
                 if (numeroMembresia != null && !numeroMembresia.isEmpty()) {
                     // Verificar si el número de membresía está registrado
@@ -256,7 +261,7 @@ public class MiembroUIFrame extends JFrame {
         salidaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String numeroMembresia = numeroMembresiaField.getText();
+                String numeroMembresia = entradaMembresiaField.getText();
 
                 if (numeroMembresia != null && !numeroMembresia.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -276,15 +281,15 @@ public class MiembroUIFrame extends JFrame {
         // Panel de Eliminación
         JPanel eliminarPanel = new JPanel(new GridBagLayout());
         eliminarPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        eliminarPanel.setBackground(new Color(255, 138, 101)); // Color naranja claro
+        eliminarPanel.setBackground(new Color(0, 0, 0)); // Color naranja claro
 
         JLabel eliminarNumeroMembresiaLabel = new JLabel("Número de membresía (Cédula):");
-        eliminarNumeroMembresiaLabel.setForeground(Color.WHITE);
-        JTextField eliminarNumeroMembresiaField = new JTextField(20);
+        eliminarNumeroMembresiaLabel.setForeground(Color.black);
+        JTextField eliminarNumeroMembresiaField = new JTextField(17);
 
         JButton eliminarButton = new JButton("Ingrese la cedula del cliente");
-        eliminarButton.setBackground(new Color(255, 69, 58));
-        eliminarButton.setForeground(Color.WHITE);
+        eliminarButton.setBackground(new Color(255,165,0));
+        eliminarButton.setForeground(Color.BLACK);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -304,15 +309,15 @@ public class MiembroUIFrame extends JFrame {
         // Panel de Mostrar Miembros
         JPanel mostrarPanel = new JPanel(new BorderLayout(10, 10));
         mostrarPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        mostrarPanel.setBackground(new Color(255, 211, 105)); // Color amarillo claro
+        mostrarPanel.setBackground(new Color(0, 0, 0)); // Color amarillo claro
 
         miembrosArea = new JTextArea();
         miembrosArea.setEditable(false);
         miembrosArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         JScrollPane scrollPanel = new JScrollPane(miembrosArea);
         JButton mostrarButton = new JButton("Mostrar Todos los Miembros");
-        mostrarButton.setBackground(new Color(0, 150, 136));
-        mostrarButton.setForeground(Color.WHITE);
+        mostrarButton.setBackground(new Color(255,165,0));
+        mostrarButton.setForeground(Color.BLACK);
 
         mostrarPanel.add(scrollPanel, BorderLayout.CENTER);
         mostrarPanel.add(mostrarButton, BorderLayout.SOUTH);
