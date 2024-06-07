@@ -14,7 +14,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MiembroUIFrame extends JFrame {
     private MiembroServicePort miembroService = new MiembroServiceImpl(new HibernateMiembroRepositoryAdapter());
@@ -27,7 +29,7 @@ public class MiembroUIFrame extends JFrame {
     private JButton salidaButton;
 
 
-
+    private Set<Integer> numerosMembresiasIngresados = new HashSet<>();
     private JTextField nombreField;
     private JTextField apellidoField;
     private JTextField edadField;
@@ -239,18 +241,29 @@ public class MiembroUIFrame extends JFrame {
 
 
         // Acción del botón de entrada
+        // Crea un HashSet para almacenar los números de membresía ingresados
+
         entradaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String numeroMembresia = entradaMembresiaField.getText();
 
                 if (numeroMembresia != null && !numeroMembresia.isEmpty()) {
-                    // Verificar si el número de membresía está registrado
-                    Miembro miembro = miembroService.obtenerMiembroPorNumeroMembresia(Integer.parseInt(numeroMembresia));
-                    if (miembro != null) {
-                        mostrarMensajeBienvenida(miembro.getNombre());
+                    int numMembresia = Integer.parseInt(numeroMembresia);
+
+                    // Verifica si el número de membresía ya fue ingresado
+                    if (numerosMembresiasIngresados.contains(numMembresia)) {
+                        JOptionPane.showMessageDialog(MiembroUIFrame.this, "Ya ingresaste este número de membresía.");
                     } else {
-                        JOptionPane.showMessageDialog(MiembroUIFrame.this, "El número de membresía no está registrado.");
+                        // Verificar si el número de membresía está registrado
+                        Miembro miembro = miembroService.obtenerMiembroPorNumeroMembresia(numMembresia);
+                        if (miembro != null) {
+                            mostrarMensajeBienvenida(miembro.getNombre());
+                            // Agrega el número de membresía al conjunto de ingresados
+                            numerosMembresiasIngresados.add(numMembresia);
+                        } else {
+                            JOptionPane.showMessageDialog(MiembroUIFrame.this, "El número de membresía no está registrado.");
+                        }
                     }
                 }
             }
@@ -264,12 +277,15 @@ public class MiembroUIFrame extends JFrame {
                 String numeroMembresia = entradaMembresiaField.getText();
 
                 if (numeroMembresia != null && !numeroMembresia.isEmpty()) {
+                    int numMembresia = Integer.parseInt(numeroMembresia);
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                     String horaSalida = sdf.format(new Date());
                     // Verificar si el número de membresía está registrado
-                    Miembro miembro = miembroService.obtenerMiembroPorNumeroMembresia(Integer.parseInt(numeroMembresia));
+                    Miembro miembro = miembroService.obtenerMiembroPorNumeroMembresia(numMembresia);
                     if (miembro != null) {
                         mostrarMensajeDespedida(miembro.getNombre());
+                        // Elimina el número de membresía del conjunto de ingresados
+                        numerosMembresiasIngresados.remove(numMembresia);
                     } else {
                         JOptionPane.showMessageDialog(MiembroUIFrame.this, "El número de membresía no está registrado.");
                     }
@@ -339,6 +355,13 @@ public class MiembroUIFrame extends JFrame {
                 String apellido = apellidoField.getText();
                 int edad = Integer.parseInt(edadField.getText());
                 int numeroMembresia = Integer.parseInt(numeroMembresiaField.getText());
+
+                // Verificar si el número de membresía ya está registrado
+                Miembro miembroExistente = miembroService.obtenerMiembroPorNumeroMembresia(numeroMembresia);
+                if (miembroExistente != null) {
+                    JOptionPane.showMessageDialog(MiembroUIFrame.this, "Número de membresía ya utilizado.");
+                    return; // Detener la ejecución del método
+                }
 
                 Miembro miembro = new Miembro(nombre, apellido, edad, numeroMembresia);
                 miembroService.registrarMiembro(miembro);
